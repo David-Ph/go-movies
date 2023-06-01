@@ -4,14 +4,17 @@
 package main
 
 import (
-	"net/http"
+	"moviesnow-backend/app"
 
 	"github.com/google/wire"
+	"github.com/labstack/echo"
 )
 
-func InitializeServer() *http.Server {
+func InitializeServer() *echo.Echo {
 	wire.Build(
-		NewServer,
+		app.NewDB,
+		app.NewRouter,
+		app.NewServer,
 	)
 	return nil
 }

@@ -7,16 +7,14 @@
 package main
 
 import (
-	"net/http"
-)
-
-import (
-	_ "github.com/joho/godotenv"
+	"github.com/labstack/echo"
+	"moviesnow-backend/app"
 )
 
 // Injectors from wire.go:
 
-func InitializeServer() *http.Server {
-	server := NewServer()
-	return server
+func InitializeServer() *echo.Echo {
+	router := app.NewRouter()
+	echoEcho := app.NewServer(router)
+	return echoEcho
 }
