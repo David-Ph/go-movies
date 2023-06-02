@@ -2,10 +2,10 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"moviesnow-backend/helper"
 	"moviesnow-backend/model/entity"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -40,7 +40,7 @@ func (userRepository *UserRepositoryImpl) Register(ctx context.Context, u *entit
 	res, err := userRepository.DB.Collection("users").InsertOne(ctx, user)
 	helper.PanicIfError(err)
 
-	user.Id = fmt.Sprint(res.InsertedID)
+	user.Id = res.InsertedID.(primitive.ObjectID).Hex()
 	return user
 }
 

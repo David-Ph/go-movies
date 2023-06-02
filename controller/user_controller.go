@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"moviesnow-backend/helper"
 	"moviesnow-backend/model/web"
 	"moviesnow-backend/service"
 	"net/http"
@@ -23,9 +24,10 @@ func NewUserControllerImpl(userService *service.UserServiceImpl) *UserController
 }
 
 func (userController UserControllerImpl) Register(c echo.Context) error {
-	userBody := &web.UserCreateRequest{
-		Username: c.FormValue("username"),
-		Password: c.FormValue("password"),
+	userBody := &web.UserCreateRequest{}
+	err := c.Bind(&userBody)
+	if err != nil {
+		helper.PanicIfError(err)
 	}
 
 	userResponse := userController.UserService.Register(c.Request().Context(), userBody)

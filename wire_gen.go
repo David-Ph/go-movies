@@ -7,14 +7,23 @@
 package main
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo"
 	"moviesnow-backend/app"
+	"moviesnow-backend/controller"
+	"moviesnow-backend/repository"
+	"moviesnow-backend/service"
 )
 
 // Injectors from wire.go:
 
 func InitializeServer() *echo.Echo {
-	router := app.NewRouter()
+	database := app.NewDB()
+	userRepositoryImpl := repository.NewUserRepositoryImpl(database)
+	validate := validator.New()
+	userServiceImpl := service.NewUserServiceImpl(userRepositoryImpl, validate)
+	userControllerImpl := controller.NewUserControllerImpl(userServiceImpl)
+	router := app.NewRouter(userControllerImpl)
 	echoEcho := app.NewServer(router)
 	return echoEcho
 }
