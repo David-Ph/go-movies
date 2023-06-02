@@ -8,8 +8,8 @@ const (
 )
 
 type User struct {
-	ProfilePicture string   `bson:"profile_picture"`
-	Username       string   `bson:"username"`
-	Password       string   `bson:"password"`
-	Role           UserRole `bson:"role"`
+	Id       string   `bson:"id"`
+	Username string   `bson:"username"`
+	Password string   `bson:"password"`
+	Role     UserRole `bson:"role"`
 }
