@@ -8,6 +8,7 @@ package main
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/google/wire"
 	"github.com/labstack/echo"
 	"moviesnow-backend/app"
 	"moviesnow-backend/controller"
@@ -27,3 +28,7 @@ func InitializeServer() *echo.Echo {
 	echoEcho := app.NewServer(router)
 	return echoEcho
 }
+
+// wire.go:
+
+var UserSet = wire.NewSet(repository.NewUserRepositoryImpl, service.NewUserServiceImpl, controller.NewUserControllerImpl)

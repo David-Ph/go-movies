@@ -14,13 +14,17 @@ import (
 	"github.com/labstack/echo"
 )
 
+var UserSet = wire.NewSet(
+	repository.NewUserRepositoryImpl,
+	service.NewUserServiceImpl,
+	controller.NewUserControllerImpl,
+)
+
 func InitializeServer() *echo.Echo {
 	wire.Build(
 		app.NewDB,
 		validator.New,
-		repository.NewUserRepositoryImpl,
-		service.NewUserServiceImpl,
-		controller.NewUserControllerImpl,
+		UserSet,
 		app.NewRouter,
 		app.NewServer,
 	)
