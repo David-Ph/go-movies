@@ -32,14 +32,16 @@ func (userController UserControllerImpl) Register(c echo.Context) error {
 
 	userResponse, err := userController.UserService.Register(c.Request().Context(), userBody)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, web.WebResponse{
+			Code:   400,
+			Status: "ERROR",
+			Data:   err.Error(),
+		})
 	}
 
-	webResponse := web.WebResponse{
+	return c.JSON(http.StatusOK, web.WebResponse{
 		Code:   200,
 		Status: "OK",
 		Data:   userResponse,
-	}
-
-	return c.JSON(http.StatusOK, webResponse)
+	})
 }

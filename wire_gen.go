@@ -25,7 +25,7 @@ func InitializeServer() *echo.Echo {
 	userServiceImpl := service.NewUserServiceImpl(userRepositoryImpl, validate)
 	userControllerImpl := controller.NewUserControllerImpl(userServiceImpl)
 	router := app.NewRouter(userControllerImpl)
-	echoEcho := app.NewServer(router)
+	echoEcho := app.NewServer(router, database)
 	return echoEcho
 }
 

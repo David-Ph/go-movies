@@ -37,7 +37,9 @@ func NewUserServiceImpl(userRepository *repository.UserRepositoryImpl, validate 
 
 func (userService *UserServiceImpl) Register(ctx context.Context, request *web.UserCreateRequest) (*web.UserResponse, error) {
 	err := userService.Validate.Struct(request)
-	helper.PanicIfError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	helper.PanicIfError(err)

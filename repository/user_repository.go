@@ -47,3 +47,9 @@ func (userRepository *UserRepositoryImpl) Register(ctx context.Context, u *entit
 
 func (userRepository *UserRepositoryImpl) GetUserData(ctx context.Context, id string) {
 }
+
+func (userRepository *UserRepositoryImpl) FindByUserId(ctx context.Context, userId string) (*entity.User, error) {
+	// res := userRepository.DB.Collection("users").FindOne(ctx, userId)
+
+	return nil, nil
+}
