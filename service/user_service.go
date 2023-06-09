@@ -6,11 +6,8 @@ import (
 	"moviesnow-backend/model/entity"
 	"moviesnow-backend/model/web"
 	"moviesnow-backend/repository"
-	"os"
-	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,7 +35,7 @@ func NewUserServiceImpl(userRepository *repository.UserRepositoryImpl, validate 
 // 	// Put code here
 // }
 
-func (userService *UserServiceImpl) Register(ctx context.Context, request *web.UserCreateRequest) *web.UserResponse {
+func (userService *UserServiceImpl) Register(ctx context.Context, request *web.UserCreateRequest) (*web.UserResponse, error) {
 	err := userService.Validate.Struct(request)
 	helper.PanicIfError(err)
 
@@ -50,24 +47,18 @@ func (userService *UserServiceImpl) Register(ctx context.Context, request *web.U
 		Password: string(hashedPassword),
 	}
 
-	user = userService.UserRepository.Register(ctx, user)
-
-	jwtKey := os.Getenv("JWT_KEY")
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = user.Username
-	claims["role"] = user.Role
-	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
-	t, err := token.SignedString([]byte(jwtKey))
+	user, err = userService.UserRepository.Register(ctx, user)
 	if err != nil {
-		helper.PanicIfError(err)
+		return nil, err
 	}
+
+	token := helper.SignToken(user.Username, string(user.Role))
 
 	return &web.UserResponse{
 		Id:       user.Id,
 		Username: user.Username,
-		Token:    t,
-	}
+		Token:    token,
+	}, nil
 }
 
 // func (userService *UserServiceImpl) GetUserData(ctx context.Context, u *entity.User) *entity.User {

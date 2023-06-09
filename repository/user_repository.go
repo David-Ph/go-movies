@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"moviesnow-backend/helper"
 	"moviesnow-backend/model/entity"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -30,7 +29,7 @@ func (userRepository *UserRepositoryImpl) Login(ctx context.Context, u *entity.U
 	// Put code here
 }
 
-func (userRepository *UserRepositoryImpl) Register(ctx context.Context, u *entity.User) *entity.User {
+func (userRepository *UserRepositoryImpl) Register(ctx context.Context, u *entity.User) (*entity.User, error) {
 	user := &entity.User{
 		Username: u.Username,
 		Password: u.Password,
@@ -38,10 +37,12 @@ func (userRepository *UserRepositoryImpl) Register(ctx context.Context, u *entit
 	}
 
 	res, err := userRepository.DB.Collection("users").InsertOne(ctx, user)
-	helper.PanicIfError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	user.Id = res.InsertedID.(primitive.ObjectID).Hex()
-	return user
+	return user, nil
 }
 
 func (userRepository *UserRepositoryImpl) GetUserData(ctx context.Context, id string) {

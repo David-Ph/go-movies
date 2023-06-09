@@ -30,7 +30,11 @@ func (userController UserControllerImpl) Register(c echo.Context) error {
 		helper.PanicIfError(err)
 	}
 
-	userResponse := userController.UserService.Register(c.Request().Context(), userBody)
+	userResponse, err := userController.UserService.Register(c.Request().Context(), userBody)
+	if err != nil {
+		return err
+	}
+
 	webResponse := web.WebResponse{
 		Code:   200,
 		Status: "OK",
