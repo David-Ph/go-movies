@@ -12,9 +12,8 @@ import (
 )
 
 type UserService interface {
-	Login(context.Context, *entity.User) *entity.User
-	Register(context.Context, *entity.User) *entity.User
-	GetUserData(context.Context, *entity.User) *entity.User
+	Login(context.Context, *web.UserCreateRequest) (*entity.User, error)
+	Register(context.Context, *web.UserCreateRequest) (*entity.User, error)
 }
 
 type UserServiceImpl struct {
@@ -31,9 +30,35 @@ func NewUserServiceImpl(userRepository *repository.UserRepositoryImpl, validate 
 	return o
 }
 
-// func (userService *UserServiceImpl) Login(ctx context.Context, u *entity.User) *entity.User {
-// 	// Put code here
-// }
+func (userService *UserServiceImpl) Login(ctx context.Context, request *web.UserCreateRequest) (*web.UserResponse, error) {
+	err := userService.Validate.Struct(request)
+	if err != nil {
+		return nil, err
+	}
+
+	user := &entity.User{
+		Username: request.Username,
+		Password: request.Password,
+	}
+
+	u, err := userService.UserRepository.FindByUsername(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(user.Password))
+	if err != nil {
+		return nil, err
+	}
+
+	token := helper.SignToken(u.Username, string(u.Role))
+
+	return &web.UserResponse{
+		Id:       u.Id,
+		Username: u.Username,
+		Token:    token,
+	}, nil
+}
 
 func (userService *UserServiceImpl) Register(ctx context.Context, request *web.UserCreateRequest) (*web.UserResponse, error) {
 	err := userService.Validate.Struct(request)
@@ -62,7 +87,3 @@ func (userService *UserServiceImpl) Register(ctx context.Context, request *web.U
 		Token:    token,
 	}, nil
 }
-
-// func (userService *UserServiceImpl) GetUserData(ctx context.Context, u *entity.User) *entity.User {
-// 	// Put code here
-// }

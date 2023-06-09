@@ -1,5 +1,7 @@
 package entity
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type UserRole string
 
 const (
@@ -8,8 +10,8 @@ const (
 )
 
 type User struct {
-	Id       string   `bson:"id"`
-	Username string   `bson:"username"`
-	Password string   `bson:"password"`
-	Role     UserRole `bson:"role"`
+	Id       primitive.ObjectID `bson:"_id" json:"id,omitempty"`
+	Username string             `bson:"username"`
+	Password string             `bson:"password"`
+	Role     UserRole           `bson:"role"`
 }

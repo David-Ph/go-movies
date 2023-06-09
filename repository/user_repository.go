@@ -4,14 +4,14 @@ import (
 	"context"
 	"moviesnow-backend/model/entity"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserRepository interface {
-	Login(context.Context, *entity.User) *entity.User
-	Register(context.Context, *entity.User) *entity.User
-	GetUserData(context.Context, *entity.User) *entity.User
+	FindByUsername(context.Context, *entity.User) (*entity.User, error)
+	Register(context.Context, *entity.User) (*entity.User, error)
 }
 
 type UserRepositoryImpl struct {
@@ -25,12 +25,23 @@ func NewUserRepositoryImpl(db *mongo.Database) *UserRepositoryImpl {
 	return o
 }
 
-func (userRepository *UserRepositoryImpl) Login(ctx context.Context, u *entity.User) {
-	// Put code here
+func (userRepository *UserRepositoryImpl) FindByUsername(ctx context.Context, u *entity.User) (*entity.User, error) {
+	result := &entity.User{}
+	res := userRepository.DB.Collection("users").FindOne(ctx, bson.D{
+		{Key: "username", Value: u.Username},
+	})
+
+	err := res.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (userRepository *UserRepositoryImpl) Register(ctx context.Context, u *entity.User) (*entity.User, error) {
 	user := &entity.User{
+		Id:       primitive.NewObjectID(),
 		Username: u.Username,
 		Password: u.Password,
 		Role:     entity.USER,
@@ -41,15 +52,6 @@ func (userRepository *UserRepositoryImpl) Register(ctx context.Context, u *entit
 		return nil, err
 	}
 
-	user.Id = res.InsertedID.(primitive.ObjectID).Hex()
+	user.Id = res.InsertedID.(primitive.ObjectID)
 	return user, nil
-}
-
-func (userRepository *UserRepositoryImpl) GetUserData(ctx context.Context, id string) {
-}
-
-func (userRepository *UserRepositoryImpl) FindByUserId(ctx context.Context, userId string) (*entity.User, error) {
-	// res := userRepository.DB.Collection("users").FindOne(ctx, userId)
-
-	return nil, nil
 }

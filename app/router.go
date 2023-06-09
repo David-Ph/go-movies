@@ -19,4 +19,5 @@ func NewRouter(userController *controller.UserControllerImpl) *Router {
 func (r Router) InitializeRoute(e *echo.Echo) {
 	userRoute := e.Group("/auth")
 	userRoute.POST("/register", r.UserController.Register)
+	userRoute.POST("/login", r.UserController.Login)
 }
