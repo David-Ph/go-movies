@@ -10,8 +10,9 @@ const (
 )
 
 type User struct {
-	Id       primitive.ObjectID `bson:"_id" json:"id,omitempty"`
-	Username string             `bson:"username"`
-	Password string             `bson:"password"`
-	Role     UserRole           `bson:"role"`
+	Id         primitive.ObjectID `bson:"_id" json:"id,omitempty"`
+	Username   string             `bson:"username"`
+	Password   string             `bson:"password"`
+	Role       UserRole           `bson:"role"`
+	Watchlists []Movie            `bson:"watchlists"`
 }

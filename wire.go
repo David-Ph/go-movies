@@ -20,11 +20,18 @@ var UserSet = wire.NewSet(
 	controller.NewUserControllerImpl,
 )
 
+var MovieSet = wire.NewSet(
+	repository.NewMovieRepositoryImpl,
+	service.NewMovieServiceImpl,
+	controller.NewMovieControllerImpl,
+)
+
 func InitializeServer() *echo.Echo {
 	wire.Build(
 		app.NewDB,
 		validator.New,
 		UserSet,
+		MovieSet,
 		app.NewRouter,
 		app.NewServer,
 	)

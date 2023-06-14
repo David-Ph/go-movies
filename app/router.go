@@ -7,17 +7,25 @@ import (
 )
 
 type Router struct {
-	UserController *controller.UserControllerImpl
+	UserController  *controller.UserControllerImpl
+	MovieController *controller.MovieControllerImpl
 }
 
-func NewRouter(userController *controller.UserControllerImpl) *Router {
+func NewRouter(
+	userController *controller.UserControllerImpl,
+	movieController *controller.MovieControllerImpl,
+) *Router {
 	return &Router{
-		UserController: userController,
+		UserController:  userController,
+		MovieController: movieController,
 	}
 }
 
 func (r Router) InitializeRoute(e *echo.Echo) {
-	userRoute := e.Group("/auth")
-	userRoute.POST("/register", r.UserController.Register)
-	userRoute.POST("/login", r.UserController.Login)
+	authRoute := e.Group("/auth")
+	authRoute.POST("/register", r.UserController.Register)
+	authRoute.POST("/login", r.UserController.Login)
+
+	movieRoute := e.Group("/movie")
+	movieRoute.POST("/", r.MovieController.Create)
 }
