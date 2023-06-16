@@ -13,6 +13,7 @@ type MovieController interface {
 	Create(echo.Context) error
 	FindAll(echo.Context) error
 	FindById(echo.Context) error
+	GetCategories(echo.Context) error
 }
 
 type MovieControllerImpl struct {
@@ -68,5 +69,14 @@ func (movieController MovieControllerImpl) FindAll(c echo.Context) error {
 		Code:   200,
 		Status: "OK",
 		Data:   movieResponse,
+	})
+}
+
+func (movieController MovieControllerImpl) GetCategories(c echo.Context) error {
+
+	return c.JSON(http.StatusOK, web.WebResponse{
+		Code:   200,
+		Status: "OK",
+		Data:   helper.Categories,
 	})
 }
