@@ -49,7 +49,7 @@ func (movieController MovieControllerImpl) Create(c echo.Context) error {
 }
 
 func (movieController MovieControllerImpl) FindAll(c echo.Context) error {
-	params := &web.MovieFilterParam{}
+	params := &web.MovieFilterQuery{}
 	err := helper.BindValidate(c, params)
 	if err != nil {
 		helper.PanicIfError(err)

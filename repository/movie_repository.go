@@ -5,9 +5,14 @@ import (
 	"fmt"
 	"moviesnow-backend/helper"
 	"moviesnow-backend/model/entity"
+	"moviesnow-backend/model/web"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type MovieRepository interface {
@@ -47,10 +52,15 @@ func (movieRepository *MovieRepositoryImpl) Create(ctx context.Context, m *entit
 	return movie, nil
 }
 
-func (movieRepository *MovieRepositoryImpl) FindAll(ctx context.Context, filter interface{}) ([]entity.Movie, error) {
+func (movieRepository *MovieRepositoryImpl) FindAll(ctx context.Context, query *web.MovieFilterQuery) ([]entity.Movie, error) {
 	result := []entity.Movie{}
+	filter := bson.M{
+		"categories": cases.Title(language.English, cases.Compact).String(query.Categories),
+	}
+	skip := int64(query.Page*query.Limit - query.Limit)
+	options := options.FindOptions{Limit: &query.Limit, Skip: &skip}
 
-	cursor, err := movieRepository.DB.Collection("movies").Find(ctx, filter)
+	cursor, err := movieRepository.DB.Collection("movies").Find(ctx, filter, &options)
 	if err != nil {
 		helper.PanicIfError(err)
 	}

@@ -14,10 +14,10 @@ type MovieCreateRequest struct {
 }
 
 type MovieFilterQuery struct {
-	Categories []string `query:"categories" validate:"omitempty,alphanum"`
-	Page       int      `query:"page" validate:"omitempty,number"`
-	Limit      int      `query:"int" validate:"omitempty,number"`
-	SortBy     string   `query:"sort_by" validate:"omitempty,alphanum"`
+	Categories string `query:"categories" validate:"omitempty"`
+	Page       int64  `query:"page" validate:"omitempty,number"`
+	Limit      int64  `query:"limit" validate:"omitempty,number"`
+	Skip       int64  `query:"skip" validate:"omitempty,number"`
 }
 
 type MovieResponse struct {

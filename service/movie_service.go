@@ -8,7 +8,6 @@ import (
 	"net/url"
 
 	"github.com/go-playground/validator/v10"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type MovieService interface {
@@ -70,15 +69,7 @@ func (movieService *MovieServiceImpl) FindAll(ctx context.Context, query *web.Mo
 		return nil, err
 	}
 
-	filter = bson.D{
-		{Key: "$and",
-			Value: bson.A{
-				bson.D{},
-			},
-		},
-	}
-
-	movies, err := movieService.MovieRepository.FindAll(ctx, filter)
+	movies, err := movieService.MovieRepository.FindAll(ctx, query)
 	if err != nil {
 		return nil, err
 	}
