@@ -11,9 +11,10 @@ type Info struct {
 }
 
 type Movie struct {
-	Id     primitive.ObjectID `bson:"_id" json:"id,omitempty"`
-	Poster string             `bson:"poster"`
-	Title  string             `bson:"title"`
-	Rating float64            `bson:"rating"`
-	Info   Info               `bson:"info"`
+	Id         primitive.ObjectID `bson:"_id" json:"id,omitempty"`
+	Poster     string             `bson:"poster"`
+	Title      string             `bson:"title"`
+	Rating     float64            `bson:"rating"`
+	Info       Info               `bson:"info"`
+	Categories []string           `bson:"categories"`
 }

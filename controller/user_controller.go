@@ -28,7 +28,7 @@ func NewUserControllerImpl(userService *service.UserServiceImpl) *UserController
 
 func (userController UserControllerImpl) Register(c echo.Context) error {
 	userBody := &web.UserCreateRequest{}
-	err := c.Bind(&userBody)
+	err := helper.BindValidate(c, userBody)
 	if err != nil {
 		helper.PanicIfError(err)
 	}

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"moviesnow-backend/helper"
 	"moviesnow-backend/model/entity"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -28,11 +29,12 @@ func NewMovieRepositoryImpl(db *mongo.Database) *MovieRepositoryImpl {
 
 func (movieRepository *MovieRepositoryImpl) Create(ctx context.Context, m *entity.Movie) (*entity.Movie, error) {
 	movie := &entity.Movie{
-		Id:     primitive.NewObjectID(),
-		Title:  m.Title,
-		Poster: m.Poster,
-		Rating: m.Rating,
-		Info:   m.Info,
+		Id:         primitive.NewObjectID(),
+		Title:      m.Title,
+		Poster:     m.Poster,
+		Rating:     m.Rating,
+		Info:       m.Info,
+		Categories: m.Categories,
 	}
 
 	res, err := movieRepository.DB.Collection("movies").InsertOne(ctx, movie)
@@ -45,11 +47,19 @@ func (movieRepository *MovieRepositoryImpl) Create(ctx context.Context, m *entit
 	return movie, nil
 }
 
-// // Implements MovieRepository
-// // TODO: Comment Here
-// func (movieRepositoryImpl *MovieRepositoryImpl) FindAll(context.Context context.Context) ([]*entity.Movie, error) {
-// 	// Put code here
-// }
+func (movieRepository *MovieRepositoryImpl) FindAll(ctx context.Context, filter interface{}) ([]entity.Movie, error) {
+	result := []entity.Movie{}
+
+	cursor, err := movieRepository.DB.Collection("movies").Find(ctx, filter)
+	if err != nil {
+		helper.PanicIfError(err)
+	}
+	if err = cursor.All(ctx, &result); err != nil {
+		helper.PanicIfError(err)
+	}
+
+	return result, nil
+}
 
 // // Implements MovieRepository
 // // TODO: Comment Here

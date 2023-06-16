@@ -27,5 +27,6 @@ func (r Router) InitializeRoute(e *echo.Echo) {
 	authRoute.POST("/login", r.UserController.Login)
 
 	movieRoute := e.Group("/movie")
-	movieRoute.POST("/", r.MovieController.Create)
+	movieRoute.POST("", r.MovieController.Create)
+	movieRoute.GET("", r.MovieController.FindAll)
 }
