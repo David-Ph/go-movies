@@ -2,12 +2,14 @@ package service
 
 import (
 	"context"
+	"errors"
 	"moviesnow-backend/model/entity"
 	"moviesnow-backend/model/web"
 	"moviesnow-backend/repository"
 	"net/url"
 
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type MovieService interface {
@@ -77,7 +79,12 @@ func (movieService *MovieServiceImpl) FindAll(ctx context.Context, query *web.Mo
 	return movies, nil
 }
 
-func (movieService *MovieServiceImpl) FindById(ctx context.Context, movieId string) (*web.MovieResponse, error) {
+func (movieService *MovieServiceImpl) FindById(ctx context.Context, id string) (*web.MovieResponse, error) {
+	movieId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, errors.New("invalid movie id")
+	}
+
 	m, err := movieService.MovieRepository.FindById(ctx, movieId)
 	if err != nil {
 		return nil, err

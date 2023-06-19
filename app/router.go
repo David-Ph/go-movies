@@ -29,7 +29,7 @@ func (r Router) InitializeRoute(e *echo.Echo) {
 	movieRoute := e.Group("/movie")
 	movieRoute.POST("", r.MovieController.Create)
 	movieRoute.GET("", r.MovieController.FindAll)
-	movieRoute.GET("/:movie_id", r.MovieController.FindAll)
+	movieRoute.GET("/:movie_id", r.MovieController.FindById)
 	movieRoute.GET("/categories", r.MovieController.GetCategories)
 
 }

@@ -30,5 +30,5 @@ type MovieResponse struct {
 }
 
 type FindMovieByIdParams struct {
-	MovieId string `param:"movie_id" validate:"required"`
+	MovieId string `param:"movie_id" json:"movie_id" form:"movie_id" validate:"required"`
 }

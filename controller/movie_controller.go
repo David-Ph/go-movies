@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type MovieController interface {
@@ -73,14 +74,26 @@ func (movieController MovieControllerImpl) FindAll(c echo.Context) error {
 }
 
 func (movieController MovieControllerImpl) FindById(c echo.Context) error {
-	params := &web.FindMovieByIdParams{}
-	err := helper.BindValidate(c, params)
-	if err != nil {
-		helper.PanicIfError(err)
+	movieId := c.Param("movie_id")
+
+	if movieId == "" {
+		return c.JSON(http.StatusBadRequest, web.WebResponse{
+			Code:   400,
+			Status: "ERROR",
+			Data:   "Movie ID is empty",
+		})
 	}
 
-	movieResponse, err := movieController.MovieService.FindById(c.Request().Context(), params.MovieId)
+	movieResponse, err := movieController.MovieService.FindById(c.Request().Context(), movieId)
 	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return c.JSON(http.StatusNotFound, web.WebResponse{
+				Code:   404,
+				Status: "ERROR",
+				Data:   "Movie not found",
+			})
+		}
+
 		return c.JSON(http.StatusBadRequest, web.WebResponse{
 			Code:   400,
 			Status: "ERROR",

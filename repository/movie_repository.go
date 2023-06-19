@@ -54,11 +54,15 @@ func (movieRepository *MovieRepositoryImpl) Create(ctx context.Context, m *entit
 
 func (movieRepository *MovieRepositoryImpl) FindAll(ctx context.Context, query *web.MovieFilterQuery) ([]entity.Movie, error) {
 	result := []entity.Movie{}
-	filter := bson.M{
-		"categories": cases.Title(language.English, cases.Compact).String(query.Categories),
-	}
 	skip := int64(query.Page*query.Limit - query.Limit)
 	options := options.FindOptions{Limit: &query.Limit, Skip: &skip}
+	filter := bson.M{}
+
+	if query.Categories != "" {
+		filter = bson.M{
+			"categories": cases.Title(language.English, cases.Compact).String(query.Categories),
+		}
+	}
 
 	cursor, err := movieRepository.DB.Collection("movies").Find(ctx, filter, &options)
 	if err != nil {
@@ -71,11 +75,12 @@ func (movieRepository *MovieRepositoryImpl) FindAll(ctx context.Context, query *
 	return result, nil
 }
 
-func (movieRepository *MovieRepositoryImpl) FindById(ctx context.Context, movieId string) (*entity.Movie, error) {
+func (movieRepository *MovieRepositoryImpl) FindById(ctx context.Context, movieId primitive.ObjectID) (*entity.Movie, error) {
 	result := &entity.Movie{}
-	res := movieRepository.DB.Collection("movies").FindOne(ctx, bson.D{
-		{Key: "_id", Value: movieId},
-	})
+	filter := bson.M{
+		"_id": movieId,
+	}
+	res := movieRepository.DB.Collection("movies").FindOne(ctx, filter)
 
 	err := res.Decode(&result)
 	if err != nil {
