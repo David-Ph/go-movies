@@ -72,6 +72,29 @@ func (movieController MovieControllerImpl) FindAll(c echo.Context) error {
 	})
 }
 
+func (movieController MovieControllerImpl) FindById(c echo.Context) error {
+	params := &web.FindMovieByIdParams{}
+	err := helper.BindValidate(c, params)
+	if err != nil {
+		helper.PanicIfError(err)
+	}
+
+	movieResponse, err := movieController.MovieService.FindById(c.Request().Context(), params.MovieId)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, web.WebResponse{
+			Code:   400,
+			Status: "ERROR",
+			Data:   err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, web.WebResponse{
+		Code:   200,
+		Status: "OK",
+		Data:   movieResponse,
+	})
+}
+
 func (movieController MovieControllerImpl) GetCategories(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, web.WebResponse{

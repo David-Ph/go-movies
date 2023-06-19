@@ -28,3 +28,7 @@ type MovieResponse struct {
 	Info       entity.Info        `json:"info"`
 	Categories []string           `json:"categories"`
 }
+
+type FindMovieByIdParams struct {
+	MovieId string `param:"movie_id" validate:"required"`
+}

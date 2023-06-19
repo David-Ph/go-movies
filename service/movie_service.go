@@ -77,7 +77,18 @@ func (movieService *MovieServiceImpl) FindAll(ctx context.Context, query *web.Mo
 	return movies, nil
 }
 
-func (movieServiceImpl *MovieServiceImpl) FindById(ctx context.Context, m *web.MovieCreateRequest) (*entity.Movie, error) {
+func (movieService *MovieServiceImpl) FindById(ctx context.Context, movieId string) (*web.MovieResponse, error) {
+	m, err := movieService.MovieRepository.FindById(ctx, movieId)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	return &web.MovieResponse{
+		Title:      m.Title,
+		Poster:     m.Poster,
+		Rating:     m.Rating,
+		Info:       m.Info,
+		Categories: m.Categories,
+		Id:         m.Id,
+	}, nil
 }

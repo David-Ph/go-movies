@@ -71,8 +71,16 @@ func (movieRepository *MovieRepositoryImpl) FindAll(ctx context.Context, query *
 	return result, nil
 }
 
-// // Implements MovieRepository
-// // TODO: Comment Here
-// func (movieRepositoryImpl *MovieRepositoryImpl) FindById(context.Context context.Context, string string) (entity.Movie, error) {
-// 	// Put code here
-// }
+func (movieRepository *MovieRepositoryImpl) FindById(ctx context.Context, movieId string) (*entity.Movie, error) {
+	result := &entity.Movie{}
+	res := movieRepository.DB.Collection("movies").FindOne(ctx, bson.D{
+		{Key: "_id", Value: movieId},
+	})
+
+	err := res.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
