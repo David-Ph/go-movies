@@ -11,6 +11,7 @@ func NewServer(r *Router, db *mongo.Database) *echo.Echo {
 	e := echo.New()
 
 	setup.UserCollectionIndex(db)
+	setup.ReviewCollectionIndex(db)
 	r.InitializeRoute(e)
 
 	return e
