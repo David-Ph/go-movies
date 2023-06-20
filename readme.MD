@@ -24,3 +24,13 @@ Simple Go CRUD API project to practice Golang REST API.
 
 4. Run `air` in your command line
 
+# To-do
+
+- Add pagination data to Find Reviews and Find Movies
+- Add more validation
+- Better error handling
+- Add Actors Entity (Can click on actors to see all movies they starred in)
+- User watchlists
+- Upload file for user profile picture and movie poster
+- Tests
+
