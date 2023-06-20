@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"moviesnow-backend/helper"
 	"moviesnow-backend/model/entity"
 	"moviesnow-backend/model/web"
@@ -17,8 +16,8 @@ import (
 
 type MovieRepository interface {
 	Create(context.Context, *entity.Movie) (*entity.Movie, error)
-	FindAll(context.Context) ([]*entity.Movie, error)
-	FindById(context.Context, string) (entity.Movie, error)
+	FindAll(context.Context, *web.MovieFilterQuery) ([]*entity.Movie, error)
+	FindById(context.Context, primitive.ObjectID) (entity.Movie, error)
 }
 
 type MovieRepositoryImpl struct {
@@ -48,7 +47,6 @@ func (movieRepository *MovieRepositoryImpl) Create(ctx context.Context, m *entit
 	}
 
 	movie.Id = res.InsertedID.(primitive.ObjectID)
-	fmt.Println(movie)
 	return movie, nil
 }
 

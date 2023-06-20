@@ -27,7 +27,10 @@ func InitializeServer() *echo.Echo {
 	movieRepositoryImpl := repository.NewMovieRepositoryImpl(database)
 	movieServiceImpl := service.NewMovieServiceImpl(movieRepositoryImpl, validate)
 	movieControllerImpl := controller.NewMovieControllerImpl(movieServiceImpl)
-	router := app.NewRouter(userControllerImpl, movieControllerImpl)
+	reviewRepositoryImpl := repository.NewReviewRepositoryImpl(database)
+	reviewServiceImpl := service.NewReviewServiceImpl(reviewRepositoryImpl, validate)
+	reviewControllerImpl := controller.NewReviewControllerImpl(reviewServiceImpl)
+	router := app.NewRouter(userControllerImpl, movieControllerImpl, reviewControllerImpl)
 	echoEcho := app.NewServer(router, database)
 	return echoEcho
 }
@@ -37,3 +40,5 @@ func InitializeServer() *echo.Echo {
 var UserSet = wire.NewSet(repository.NewUserRepositoryImpl, service.NewUserServiceImpl, controller.NewUserControllerImpl)
 
 var MovieSet = wire.NewSet(repository.NewMovieRepositoryImpl, service.NewMovieServiceImpl, controller.NewMovieControllerImpl)
+
+var ReviewSet = wire.NewSet(repository.NewReviewRepositoryImpl, service.NewReviewServiceImpl, controller.NewReviewControllerImpl)

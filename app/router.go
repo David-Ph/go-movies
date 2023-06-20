@@ -7,17 +7,20 @@ import (
 )
 
 type Router struct {
-	UserController  *controller.UserControllerImpl
-	MovieController *controller.MovieControllerImpl
+	UserController   *controller.UserControllerImpl
+	MovieController  *controller.MovieControllerImpl
+	ReviewController *controller.ReviewControllerImpl
 }
 
 func NewRouter(
 	userController *controller.UserControllerImpl,
 	movieController *controller.MovieControllerImpl,
+	reviewController *controller.ReviewControllerImpl,
 ) *Router {
 	return &Router{
-		UserController:  userController,
-		MovieController: movieController,
+		UserController:   userController,
+		MovieController:  movieController,
+		ReviewController: reviewController,
 	}
 }
 
@@ -32,4 +35,6 @@ func (r Router) InitializeRoute(e *echo.Echo) {
 	movieRoute.GET("/:movie_id", r.MovieController.FindById)
 	movieRoute.GET("/categories", r.MovieController.GetCategories)
 
+	reviewRoute := e.Group("/review")
+	reviewRoute.POST("", r.ReviewController.Create)
 }

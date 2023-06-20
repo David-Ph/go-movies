@@ -14,7 +14,7 @@ import (
 
 type MovieService interface {
 	Create(context.Context, *web.MovieCreateRequest) (*entity.Movie, error)
-	FindAll(context.Context) ([]*entity.Movie, error)
+	FindAll(context.Context, *web.MovieFilterQuery) ([]*entity.Movie, error)
 	FindById(context.Context, string) (entity.Movie, error)
 }
 
