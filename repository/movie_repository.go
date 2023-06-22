@@ -62,6 +62,12 @@ func (movieRepository *MovieRepositoryImpl) FindAll(ctx context.Context, query *
 		}
 	}
 
+	// ? example of filter by movie name
+	// searchFilter := bson.M{"name": bson.M{"$regex": search, "$options": "im"}}
+	// var aggSearch, aggSort, aggLimit, aggSkip, aggPopulate, aggProject bson.M
+	// aggSearch = bson.M{"$match": searchFilter}
+	// ? end of exmaple
+
 	cursor, err := movieRepository.DB.Collection("movies").Find(ctx, filter, &options)
 	if err != nil {
 		helper.PanicIfError(err)

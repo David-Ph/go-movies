@@ -9,3 +9,8 @@ type Review struct {
 	Rating  float64            `bson:"rating"`
 	Text    string             `bson:"text"`
 }
+
+type MovieAverageRating struct {
+	Id            primitive.ObjectID `bson:"_id"`
+	AverageRating float64            `bson:"averageRating"`
+}
