@@ -37,4 +37,8 @@ func (r Router) InitializeRoute(e *echo.Echo) {
 
 	reviewRoute := e.Group("/review")
 	reviewRoute.POST("", r.ReviewController.Create)
+	reviewRoute.DELETE("/:id", r.ReviewController.Delete)
+	reviewRoute.GET("/user/:user_id", r.ReviewController.FindByUserId)
+	reviewRoute.GET("/movie/:movie_id", r.ReviewController.FindByMovieId)
+
 }

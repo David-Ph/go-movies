@@ -18,3 +18,15 @@ type ReviewResponse struct {
 	Text    string             `json:"text"`
 	Rating  float64            `json:"rating"`
 }
+
+type FindReviewByReviewIdParam struct {
+	ReviewId string `param:"review_id" json:"review_id" form:"review_id" validate:"required"`
+}
+
+type FindReviewsByMovieIdParam struct {
+	MovieId string `param:"movie_id" json:"movie_id" form:"movie_id" validate:"required"`
+}
+
+type FindReviewsByUserIdParam struct {
+	UserId string `param:"user_id" json:"user_id" form:"user_id" validate:"required"`
+}

@@ -32,5 +32,8 @@ Simple Go CRUD API project to practice Golang REST API.
 - Add Actors Entity (Can click on actors to see all movies they starred in)
 - User watchlists
 - Upload file for user profile picture and movie poster
-- Tests
+- Add unit tests
+- Search movie by name
 
+- Authentication
+- Populate Users and Movies with reviews

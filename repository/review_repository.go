@@ -12,8 +12,9 @@ import (
 
 type ReviewRepository interface {
 	Create(context.Context, *entity.Review, primitive.ObjectID, primitive.ObjectID) (*entity.Review, error)
-	Update(context.Context, *entity.Review) (entity.Review, error)
 	Delete(context.Context) ([]*entity.Review, error)
+	FindByMovieId(context.Context, primitive.ObjectID) ([]*entity.Review, error)
+	FindByUserId(context.Context, primitive.ObjectID) ([]*entity.Review, error)
 }
 
 type ReviewRepositoryImpl struct {
@@ -72,4 +73,52 @@ func (reviewRepository *ReviewRepositoryImpl) Create(ctx context.Context, r *ent
 	_, _ = reviewRepository.DB.Collection("movies").UpdateByID(ctx, r.MovieId, update)
 
 	return review, nil
+}
+
+func (reviewRepository *ReviewRepositoryImpl) Delete(ctx context.Context, id primitive.ObjectID) (*entity.Review, error) {
+	reviews := &entity.Review{}
+	filter := bson.M{
+		"_id": id,
+	}
+
+	_, err := reviewRepository.DB.Collection("reviews").DeleteOne(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	return reviews, nil
+}
+
+func (reviewRepository *ReviewRepositoryImpl) FindByMovieId(ctx context.Context, movieId primitive.ObjectID) ([]entity.Review, error) {
+	reviews := []entity.Review{}
+	filter := bson.M{
+		"movie_id": movieId,
+	}
+
+	cursor, err := reviewRepository.DB.Collection("reviews").Find(ctx, filter)
+	if err != nil {
+		helper.PanicIfError(err)
+	}
+	if err = cursor.All(ctx, &reviews); err != nil {
+		helper.PanicIfError(err)
+	}
+
+	return reviews, nil
+}
+
+func (reviewRepository *ReviewRepositoryImpl) FindByUserId(ctx context.Context, userId primitive.ObjectID) ([]entity.Review, error) {
+	reviews := []entity.Review{}
+	filter := bson.M{
+		"user_id": userId,
+	}
+
+	cursor, err := reviewRepository.DB.Collection("reviews").Find(ctx, filter)
+	if err != nil {
+		helper.PanicIfError(err)
+	}
+	if err = cursor.All(ctx, &reviews); err != nil {
+		helper.PanicIfError(err)
+	}
+
+	return reviews, nil
 }
