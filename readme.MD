@@ -34,6 +34,3 @@ Simple Go CRUD API project to practice Golang REST API.
 - Upload file for user profile picture and movie poster
 - Add unit tests
 - Search movie by name
-
-- Authentication
-- Populate Users and Movies with reviews
