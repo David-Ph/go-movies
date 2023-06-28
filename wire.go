@@ -6,6 +6,7 @@ package main
 import (
 	"moviesnow-backend/app"
 	"moviesnow-backend/controller"
+	"moviesnow-backend/middleware"
 	"moviesnow-backend/repository"
 	"moviesnow-backend/service"
 
@@ -32,6 +33,10 @@ var ReviewSet = wire.NewSet(
 	controller.NewReviewControllerImpl,
 )
 
+var MiddlewareSet = wire.NewSet(
+	middleware.NewAuthMiddleware,
+)
+
 func InitializeServer() *echo.Echo {
 	wire.Build(
 		app.NewDB,
@@ -39,6 +44,7 @@ func InitializeServer() *echo.Echo {
 		UserSet,
 		MovieSet,
 		ReviewSet,
+		MiddlewareSet,
 		app.NewRouter,
 		app.NewServer,
 	)

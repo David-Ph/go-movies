@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo"
 	"moviesnow-backend/app"
 	"moviesnow-backend/controller"
+	"moviesnow-backend/middleware"
 	"moviesnow-backend/repository"
 	"moviesnow-backend/service"
 )
@@ -30,7 +31,8 @@ func InitializeServer() *echo.Echo {
 	reviewRepositoryImpl := repository.NewReviewRepositoryImpl(database)
 	reviewServiceImpl := service.NewReviewServiceImpl(reviewRepositoryImpl, validate)
 	reviewControllerImpl := controller.NewReviewControllerImpl(reviewServiceImpl)
-	router := app.NewRouter(userControllerImpl, movieControllerImpl, reviewControllerImpl)
+	authMiddleware := middleware.NewAuthMiddleware()
+	router := app.NewRouter(userControllerImpl, movieControllerImpl, reviewControllerImpl, authMiddleware)
 	echoEcho := app.NewServer(router, database)
 	return echoEcho
 }
@@ -42,3 +44,5 @@ var UserSet = wire.NewSet(repository.NewUserRepositoryImpl, service.NewUserServi
 var MovieSet = wire.NewSet(repository.NewMovieRepositoryImpl, service.NewMovieServiceImpl, controller.NewMovieControllerImpl)
 
 var ReviewSet = wire.NewSet(repository.NewReviewRepositoryImpl, service.NewReviewServiceImpl, controller.NewReviewControllerImpl)
+
+var MiddlewareSet = wire.NewSet(middleware.NewAuthMiddleware)

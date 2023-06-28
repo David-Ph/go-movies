@@ -8,7 +8,7 @@ import (
 )
 
 func SignToken(username string, role string) string {
-	jwtKey := os.Getenv("JWT_KEY")
+	jwtKey := []byte(os.Getenv("JWT_KEY"))
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
